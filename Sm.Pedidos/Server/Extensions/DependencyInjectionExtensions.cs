@@ -8,10 +8,10 @@ namespace Sm.Pedidos.Extensions
     {
         public static void AddAppOptions(this IServiceCollection services)
         {
-            services.AddSingleton<AppOptions>(sp =>
+            services.AddSingleton<AppSettings>(sp =>
             {
                 var config = sp.GetService<IConfiguration>();
-                return config.GetSection("AppOptions").Get<AppOptions>();
+                return config.GetSection("AppSettings").Get<AppSettings>();
             });
         }
     }

@@ -1,5 +1,6 @@
 using Domain.Settings;
 using EntityFramework.Config.DataBase;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -7,7 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Sm.Pedidos.Extensions;
+using Sm.Pedidos.Server.Services;
+using Sm.Pedidos.Services;
+using System.Text;
 
 namespace Sm.Pedidos.Server
 {
@@ -28,16 +33,44 @@ namespace Sm.Pedidos.Server
 
             services.AddDbContext<IdentityUserDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("IdentityUserDb")));
             services.AddDbContext<SmPedidosDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SmPedidosDb")));
-
-            services.AddIdentity<IdentityUser, IdentityRole>()
-                    .AddEntityFrameworkStores<IdentityUserDbContext>()
-                    .AddDefaultTokenProviders();
-
+            
             services.AddControllersWithViews();
             services.AddRazorPages();
 
-            //Design options
-            services.AddAppOptions();
+            
+
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                   .AddEntityFrameworkStores<IdentityUserDbContext>()
+                   .AddDefaultTokenProviders();
+
+            // Configure AppSettigns
+            var appSettingsSection = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingsSection);
+
+            // JWT
+            var appSettings = appSettingsSection.Get<AppSettings>();
+            var key = Encoding.ASCII.GetBytes(appSettings.SecretJwt);
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = true;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidAudiences = appSettings.ValidOn,//Valido Em
+                    ValidIssuer = appSettings.Issuer//Emissor
+                };
+            });
+
+            //Dependency Injection
+            services.AddTransient<ITokenService, TokenService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

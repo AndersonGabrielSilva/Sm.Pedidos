@@ -1,0 +1,12 @@
+UNHANDLED EXCEPTIONS FROM PROCESS 13136:
+=====================
+11/09/2021 17:43:10
+System.IO.IOException: Pipe is broken.
+   at System.IO.Pipes.ReadWriteCompletionSource.HandleError(Int32 errorCode) in System.IO.Pipes.dll:token 0x6000132+0x0
+   at System.IO.Pipes.PipeCompletionSource`1.CompleteCallback(Int32 resultState) in System.IO.Pipes.dll:token 0x6000114+0x45
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state) in System.Private.CoreLib.dll:token 0x6002ead+0x40
+   at System.Threading._IOCompletionCallback.PerformIOCompletionCallback(UInt32 errorCode, UInt32 numBytes, NativeOverlapped* pNativeOverlapped) in System.Private.CoreLib.dll:token 0x6002c5a+0x42
+--- End of stack trace from previous location ---
+   at System.IO.Pipes.PipeStream.Write(Byte[] buffer, Int32 offset, Int32 count) in System.IO.Pipes.dll:token 0x60000df+0x0
+   at Microsoft.Build.BackEnd.NodeEndpointOutOfProcBase.RunReadLoop(Stream localReadPipe, Stream localWritePipe, ConcurrentQueue`1 localPacketQueue, AutoResetEvent localPacketAvailable, AutoResetEvent localTerminatePacketPump) in Microsoft.Build.dll:token 0x600107a+0x1b8
+===================

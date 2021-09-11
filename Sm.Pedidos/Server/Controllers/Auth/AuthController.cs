@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Sm.Pedidos.Server.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,17 +14,17 @@ namespace Sm.Pedidos.Server.Controllers.Auth
     public class AuthController : BaseController
     {
         #region Atributtes
-        private readonly IConfiguration _configuration;
+        private readonly ITokenService _tokenService;
         private SignInManager<IdentityUser> _signInManager;
         private UserManager<IdentityUser> _userManager;
         #endregion
 
-        public AuthController(IConfiguration configuration, 
+        public AuthController(ITokenService tokenService,
                               SignInManager<IdentityUser> signInManager,
                               UserManager<IdentityUser> userManager,
                               IHttpContextAccessor contextAccessor) : base(contextAccessor)
         {
-            _configuration = configuration;
+            _tokenService = tokenService;
             _signInManager = signInManager;
             _userManager = userManager;
         }
@@ -37,7 +38,7 @@ namespace Sm.Pedidos.Server.Controllers.Auth
             {
                 UserName = registerUser.UserName,
                 Email = registerUser.Email,
-                EmailConfirmed = true,            
+                EmailConfirmed = true,
             };
 
             var result = await _userManager.CreateAsync(user, registerUser.Password);
@@ -46,17 +47,23 @@ namespace Sm.Pedidos.Server.Controllers.Auth
 
             await _signInManager.SignInAsync(user, false);
 
-            return Ok();
+            return Ok(await _tokenService.GenerateTokenAsync(registerUser.Email));
         }
 
 
         [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody] LoginUserViewModel LoginUser)
+        public async Task<IActionResult> Login([FromBody] LoginUserViewModel loginUser)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState.Values.SelectMany(x => x.Errors));
 
-            
-            return Ok();
+            var result = await _signInManager.PasswordSignInAsync(loginUser.UserName, loginUser.Password, false, true);
+
+            if (result.Succeeded)
+            {
+                return Ok(await _tokenService.GenerateTokenAsync(loginUser.Email));
+            }
+
+            return BadRequest("Usuário ou senha inválidos");
         }
     }
 }
