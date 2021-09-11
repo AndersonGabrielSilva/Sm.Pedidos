@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Domain.Entity.Registrations
 {
-    public class People
+    public class People : EntityBase
     {
         public string Name { get; set; }
         public string LastName { get; set; }
