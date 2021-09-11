@@ -15,6 +15,6 @@ namespace Domain.Entity.Registrations
 
         public virtual Establishment Establishment { get;set;}
         public ICollection<User> Users { get; set; }
-        public ICollection<Client> Customers { get; set; }
+        public ICollection<Customers> Customers { get; set; }
     }
 }
