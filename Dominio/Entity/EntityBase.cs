@@ -17,11 +17,13 @@ namespace Domain.Entity
         public DateTime DateRegistration { get; set; }
         public DateTime DateLastUpdate { get; set; }
 
-        public long? UserId { get; set; }
+        public long? UserChangeId { get; set; }
+
+        public bool Inactivated { get; set; }
 
         public void RegisterChange(long? userId)
         {
-            UserId = userId;
+            UserChangeId = userId;
             DateLastUpdate = DateTime.UtcNow;
         }
     }
