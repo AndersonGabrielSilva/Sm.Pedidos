@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Domain.Entity.Login;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace EntityFramework.Config.DataBase
 {
-    public class IdentityUserDbContext : IdentityDbContext
+    public class IdentityUserDbContext : IdentityDbContext<UserIdentity>
     {
         public IdentityUserDbContext(DbContextOptions<IdentityUserDbContext> options) : base(options)
         {

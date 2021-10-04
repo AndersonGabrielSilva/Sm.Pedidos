@@ -13,11 +13,7 @@ namespace EntityFramework.Config.DataBase
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<People>()
-                        .Property(e => e.Document)
-                        .HasConversion(
-                            v => v.ToString(),
-                            v => new Document(v));
+           
 
             base.OnModelCreating(modelBuilder);
         }
@@ -32,6 +28,8 @@ namespace EntityFramework.Config.DataBase
         public DbSet<Customers> Customers { get; set; }
         public DbSet<Category> Category { get; set; }
         public DbSet<Address> Address { get; set; }
+        public DbSet<UserType> UserTypes { get; set; }
+        public DbSet<Permissions> Permissions { get; set; }
 
     }
 }

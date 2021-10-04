@@ -1,18 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Entity.Registrations
 {
-    public class User
+    public class User : EntityBaseTenant
     {
-        [Key]
-        public long Id { get; set; }
-
         [StringLength(50)]
         public string Name { get; set; }
 
@@ -24,7 +17,8 @@ namespace Domain.Entity.Registrations
         [Required]
         public Guid IdentityUserId { get; set; }
 
-        public long TenentId { get; set; }
+        public long UserTypeId { get; set; }
+        public UserType UserType { get; set; }
 
         public ICollection<Address> Adresses { get; set; }
         public ICollection<Establishment> Establishments { get; set; }

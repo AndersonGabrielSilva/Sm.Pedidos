@@ -5,10 +5,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Domain.Entity.Registrations
 {
     public class Customers : EntityBase
-    {
-        [Key]
-        public long Id { get; set; }
-
+    {    
         [StringLength(50)]
         public string Name { get; set; }
 
