@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace EntityFramework.Config.DataBase
 {
-    public class IdentityUserDbContext : IdentityDbContext<UserIdentity>
+    public class ApplicationUserDbContext : IdentityDbContext<ApplicationUser>
     {
-        public IdentityUserDbContext(DbContextOptions<IdentityUserDbContext> options) : base(options)
+        public ApplicationUserDbContext(DbContextOptions<ApplicationUserDbContext> options) : base(options)
         {
-
         }
+
     }
 }
